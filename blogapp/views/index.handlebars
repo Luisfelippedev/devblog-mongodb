@@ -3,7 +3,14 @@
   <p class="lead">Blog simples desenvolvido em Node.js utilizando a bilbioteca Express e o banco de dados MongoDB</p>
   <hr class="my-4">
   <p>Aqui você encontra diversas postagens relacianadas à tecnologia!</p>
-  <a class="btn btn-primary btn-lg" href="usuarios/registro" role="button">Criar uma conta</a>
+  {{#each user}}
+    {{#if checkAdmin}}
+    {{/if}}
+  {{else}}
+    <a class="btn btn-primary btn-lg" href="usuarios/registro" role="button">Criar uma conta</a><br><br>
+    <small>Ja possue uma conta?</small><br>
+    <a class="btn btn-secondary btn-lg" href="usuarios/login" role="button">Faça Login</a>
+  {{/each}}
 </div><br>
 
 <hr>

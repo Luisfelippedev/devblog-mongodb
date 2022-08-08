@@ -8,7 +8,6 @@
     const path = require('path');
     const session = require('express-session');
     const flash = require('connect-flash');
-    const { raw } = require('body-parser');
     require('./models/Postagem');
     const Postagem = mongoose.model('postagens');
     require('./models/Categoria');
@@ -19,6 +18,7 @@
     const passport = require('passport')
     require('./config/auth')(passport)
     const {checkAdmin} = require('./helpers/checkAdmin')
+    require('dotenv').config();
 
 
 // Configurações
@@ -49,7 +49,7 @@
         app.engine('handlebars', handlebars.engine({defaultLayout: 'main'}));
         app.set('view engine', 'handlebars');
     // Mongoose
-        mongoose.connect('mongodb://localhost/blogapp').then(() => {
+        mongoose.connect(`mongodb://${process.env.MONGOUSER}:${process.env.MONGOPASSWORD}@ac-nfteh5g-shard-00-00.9hguiec.mongodb.net:27017,ac-nfteh5g-shard-00-01.9hguiec.mongodb.net:27017,ac-nfteh5g-shard-00-02.9hguiec.mongodb.net:27017/?ssl=true&replicaSet=atlas-w5luxv-shard-0&authSource=admin&retryWrites=true&w=majority`).then(() => {
             console.log('Conectado ao MongoDb com sucesso!')
         }).catch((err) => {
             console.log('Erro ao se conectar ao MongoDB: '+err);
