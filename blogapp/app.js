@@ -39,14 +39,20 @@
             res.locals.error_msg = req.flash('error_msg');
             res.locals.error = req.flash('error')
             res.locals.user = req.user || null;
-            res.locals.checkAdmin = checkAdmin || null;
+            //res.locals.checkAdmin = checkAdmin || null;
             next();
         })    
     // Body-Parser
         app.use(bodyParser.urlencoded({extended: false}));
         app.use(bodyParser.json());  
     // Handlebars (Template-Engine)
-        app.engine('handlebars', handlebars.engine({defaultLayout: 'main'}));
+        app.engine('handlebars', handlebars.engine({
+            defaultLayout: 'main',
+            runtimeOptions: {
+                allowProtoPropertiesByDefault: true,
+                allowProtoMethodsByDefault: true,
+            },
+        }));
         app.set('view engine', 'handlebars');
     // Mongoose
         mongoose.connect(`mongodb://${process.env.MONGOUSER}:${process.env.MONGOPASSWORD}@ac-nfteh5g-shard-00-00.9hguiec.mongodb.net:27017,ac-nfteh5g-shard-00-01.9hguiec.mongodb.net:27017,ac-nfteh5g-shard-00-02.9hguiec.mongodb.net:27017/?ssl=true&replicaSet=atlas-w5luxv-shard-0&authSource=admin&retryWrites=true&w=majority`).then(() => {

@@ -1,5 +1,10 @@
 <div class="jumbotron">
-  <h1 class="display-4">Bem vindo ao DevBlog</h1>
+  {{#if user}}
+    <h2 class="display-4">Olá {{user.nome}}, Bem vindo ao DevBlog</h3>
+  {{else}}
+    <h2 class="display-4">Bem vindo ao DevBlog</h3>
+  {{/if}}
+
   <p class="lead">Blog simples desenvolvido em Node.js utilizando a bilbioteca Express e o banco de dados MongoDB</p>
   <hr class="my-4">
   <p>Aqui você encontra diversas postagens relacianadas à tecnologia!</p>

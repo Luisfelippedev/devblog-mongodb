@@ -40,12 +40,17 @@ router.post('/registro', (req, res)=>{
                 req.flash('error_msg', "Já existe uma conta registrada com esse email")
                 res.redirect('/usuarios/registro')
             }else{
+                const trueAdmin = req.body.trueAdmin
+                checkAdmin = 0
+                if(trueAdmin){
+                    checkAdmin = 1  //(Ativar para criar um usuário como administrador)
+                }
                 
                 const novoUsuario = new Usuario({
                     nome: req.body.nome,
                     email: req.body.email,
-                    senha: req.body.senha
-                    //checkAdmin: 1  (Ativar para criar um usuário como administrador)
+                    senha: req.body.senha,
+                    checkAdmin: checkAdmin
                 })
 
                 bcrypt.genSalt(10, (err, salt)=>{
@@ -60,6 +65,7 @@ router.post('/registro', (req, res)=>{
                         novoUsuario.save().then(()=>{
                             req.flash('success_msg', 'Usuário criado com sucesso!')
                             res.redirect('/')
+                            
                         }).catch((err)=>{
                             req.flash('error_msg', 'Ocorreu um erro ao criar o usuário, tente novamente!')
                             res.redirect('/usuarios/registro')
@@ -79,7 +85,6 @@ router.get('/login', (req, res)=>{
 })
 
 router.post('/login', (req, res, next)=>{
-
     passport.authenticate("local", {
         successRedirect: "/",
         failureRedirect: "/usuarios/login",
