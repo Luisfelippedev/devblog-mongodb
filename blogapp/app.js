@@ -24,7 +24,7 @@
 // Configurações
     // Sessão
         app.use(session({
-            secret: 'cursodenode',
+            secret: 'KpdodlKspJDLjasdo',
             ressave: true,
             saveUninitialized: true
         }));
