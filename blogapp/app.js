@@ -19,6 +19,7 @@
     require('./config/auth')(passport)
     const {checkAdmin} = require('./helpers/checkAdmin')
     require('dotenv').config();
+    const redis = require('./config/redis')
 
 
 // Configurações
@@ -54,7 +55,7 @@
         }));
         app.set('view engine', 'handlebars');
     // Mongoose
-        mongoose.connect(`mongodb://${process.env.MONGOUSER}:${process.env.MONGOPASSWORD}@ac-nfteh5g-shard-00-00.9hguiec.mongodb.net:27017,ac-nfteh5g-shard-00-01.9hguiec.mongodb.net:27017,ac-nfteh5g-shard-00-02.9hguiec.mongodb.net:27017/?ssl=true&replicaSet=atlas-w5luxv-shard-0&authSource=admin&retryWrites=true&w=majority`).then(() => {
+        mongoose.connect(`mongodb://localhost/db3`).then(() => {
             console.log('Conectado ao MongoDb com sucesso!')
         }).catch((err) => {
             console.log('Erro ao se conectar ao MongoDB: '+err);
@@ -133,3 +134,5 @@
     app.listen(PORT, () => {
         console.log('Servidor rodando na porta 8081.. Ctrl + C para derrubar...');
     })
+
+ 
