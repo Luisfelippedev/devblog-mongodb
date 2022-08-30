@@ -5,47 +5,48 @@ require('../models/Usuario');
 const Usuario = mongoose.model("usuarios");
 const bcrypt = require('bcryptjs');
 const passport = require('passport')
+const cache = require('../config/redis')
 
 
-router.get('/registro', (req, res)=>{
+router.get('/registro', (req, res) => {
     res.render('usuarios/registro')
 })
 
-router.post('/registro', (req, res)=>{
+router.post('/registro', (req, res) => {
     let erros = []
 
     // Validação de dados
-    if(!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null){
-        errors.push({texto: 'Nome inválido'})
+    if (!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
+        errors.push({ texto: 'Nome inválido' })
     }
-    if(!req.body.email || typeof req.body.email == undefined || req.body.email == null){
-        errors.push({texto: 'Email inválido'})
+    if (!req.body.email || typeof req.body.email == undefined || req.body.email == null) {
+        errors.push({ texto: 'Email inválido' })
     }
-    if(!req.body.senha || typeof req.body.senha == undefined || req.body.senha == null){
-        errors.push({texto: 'Senha inválida'})
+    if (!req.body.senha || typeof req.body.senha == undefined || req.body.senha == null) {
+        errors.push({ texto: 'Senha inválida' })
     }
-    if(req.body.senha.length < 6){
-        erros.push({texto: 'Senha muito curta!'})
+    if (req.body.senha.length < 6) {
+        erros.push({ texto: 'Senha muito curta!' })
     }
-    if(req.body.senha != req.body.senha2){
-        erros.push({texto: 'Senhas não coincidem, tente novamente!'})
+    if (req.body.senha != req.body.senha2) {
+        erros.push({ texto: 'Senhas não coincidem, tente novamente!' })
     }
-    
-    if(erros.length > 0){
-        res.render('usuarios/registro', {erros: erros})
-    }else{
+
+    if (erros.length > 0) {
+        res.render('usuarios/registro', { erros: erros })
+    } else {
         //  Verifica se existe algum usuário já registrado no banco, através do email.
-        Usuario.findOne({email: req.body.email}).lean().then((usuario)=>{
-            if(usuario){
+        Usuario.findOne({ email: req.body.email }).lean().then((usuario) => {
+            if (usuario) {
                 req.flash('error_msg', "Já existe uma conta registrada com esse email")
                 res.redirect('/usuarios/registro')
-            }else{
+            } else {
                 const trueAdmin = req.body.trueAdmin
                 checkAdmin = 0
-                if(trueAdmin){
+                if (trueAdmin) {
                     checkAdmin = 1  //(Ativar para criar um usuário como administrador)
                 }
-                
+
                 const novoUsuario = new Usuario({
                     nome: req.body.nome,
                     email: req.body.email,
@@ -53,20 +54,20 @@ router.post('/registro', (req, res)=>{
                     checkAdmin: checkAdmin
                 })
 
-                bcrypt.genSalt(10, (err, salt)=>{
-                    bcrypt.hash(novoUsuario.senha, salt, (err, hash)=>{
-                        if(err){
+                bcrypt.genSalt(10, (err, salt) => {
+                    bcrypt.hash(novoUsuario.senha, salt, (err, hash) => {
+                        if (err) {
                             req.flash('error_msg', 'Ocorreu um erro ao tentar salvar o usuário')
                             res.redirect('/')
                         }
 
                         novoUsuario.senha = hash;
 
-                        novoUsuario.save().then(()=>{
+                        novoUsuario.save().then(() => {
                             req.flash('success_msg', 'Usuário criado com sucesso!')
                             res.redirect('/')
-                            
-                        }).catch((err)=>{
+
+                        }).catch((err) => {
                             req.flash('error_msg', 'Ocorreu um erro ao criar o usuário, tente novamente!')
                             res.redirect('/usuarios/registro')
                         })
@@ -74,17 +75,17 @@ router.post('/registro', (req, res)=>{
                 })
 
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             req.flash('error_msg', 'Ocorreu um erro interno!')
         })
     }
 })
 
-router.get('/login', (req, res)=>{
+router.get('/login', (req, res) => {
     res.render('usuarios/login')
 })
 
-router.post('/login', (req, res, next)=>{
+router.post('/login', (req, res, next) => {
     passport.authenticate("local", {
         successRedirect: "/",
         failureRedirect: "/usuarios/login",
@@ -94,10 +95,10 @@ router.post('/login', (req, res, next)=>{
 })
 
 router.get('/logout', (req, res, next) => {
-    req.logout(function(err) {
+    req.logout(function (err) {
         if (err) { return next(err) }
         res.redirect('/')
-      })
+    })
 })
 
 
