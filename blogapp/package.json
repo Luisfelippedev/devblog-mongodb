@@ -12,6 +12,7 @@
     "express-session": "^1.17.3",
     "ioredis": "^5.2.3",
     "mongoose": "^6.4.6",
+    "neo4j-driver": "^4.4.7",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "redis": "^4.3.0"

@@ -129,6 +129,9 @@
 
     app.use('/admin', admin)
     app.use('/usuarios', usuarios)
+
+    const neo4j = require('./config/neo4j')
+    app.post('/addPessoa', neo4j.addNeo4j)
 // Outros
     const PORT = 8081
     app.listen(PORT, () => {
