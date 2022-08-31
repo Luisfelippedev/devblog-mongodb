@@ -7,10 +7,15 @@ Para inicializar a API vocês deverão:
 1. Clonar o repositório
 2. Alterar os parametros de conexão do arquivo .env que se encontra na raiz da aplicação
 
-Exemplo do arquivo .env (trocar os valores das chaves pelos dados do seu banco em nuvem Mongo Atlas):
+Exemplo do arquivo .env (trocar os valores das chaves pelos dados dos seus bancos mongo atlas e neo4j):
 ```
 MONGOUSER='<userDB>'
 MONGOPASSWORD='<passwordDB>'
+
+NEO4J_HOST = ''
+NEO4J_PORT = ''
+NEO4J_USER =  ''
+NEO4J_PASSWORD = ''
 ```
 
 3. Execute ```npm install -y``` na raiz da aplicação
