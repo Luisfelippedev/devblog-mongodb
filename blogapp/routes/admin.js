@@ -16,12 +16,26 @@ router.get('/posts', checkAdmin, (req, res) => {
 })
 
 router.get('/categorias', checkAdmin, async (req, res) => {
-    Categoria.find().lean().sort({ date: 'desc' }).then((async categorias => {
-        res.render('admin/categorias', { categorias: categorias });
-    })).catch((err) => {
-        req.flash('error_msg', 'Houve um erro ao listar as categorias!')
-        res.redirect('/admin')
-    })
+    await cache.connect()
+    const categoria = await cache.get("category")
+    if (categoria == null) {
+        await cache.disconnect()
+    } else {
+        async function setRedis(categorias) {
+            await cache.set("category", JSON.stringify(categorias), {
+                EX: 3600
+            })
+            await cache.disconnect()
+        }
+        Categoria.find().lean().sort({ date: 'desc' }).then((async categorias => {
+            const cat = categorias
+            setRedis(cat)
+            res.render('admin/categorias', { categorias: cat });    
+        })).catch((err) => {
+            req.flash('error_msg', 'Houve um erro ao listar as categorias!')
+            res.redirect('/admin/categorias')
+        })
+    }
 })
 
 
